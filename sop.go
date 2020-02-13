@@ -1,42 +1,28 @@
 package main
 
 import (
-	"log"
 	"os"
 	"fmt"
+	"log"
 	"sort"
 
 	"github.com/urfave/cli"
 )
 
-var (
-	version = "0.1.0"
-	commandNotImplemented = cli.Exit("Command not implemented", 69)
-	subCommandNotImplemented = cli.Exit("Subcommand not implemented", 37)
-)
+var version = "0.1.0"
+
+// SOPGOComment is the comment expected by openpgp.NewEntity
+var SOPGOComment = "sop-go version " + version
+
 
 func main() {
 
 	app := &cli.App{
 		Name:  "sop-go",
-		Usage: "Stateless OpenPGP implementation for ProtonMail/crypto",
-		Flags: []cli.Flag{
-			&cli.BoolFlag{
-				Name: "armor",
-				Value: true,
-			},
-			&cli.BoolFlag{
-				Name: "no-armor",
-			},
-			&cli.StringFlag{
-				Name: "as",
-				Value: "binary",
-				Usage: "--as={binary|text}",
-			},
-		},
+		Usage: "Stateless OpenPGP implementation for github.com/ProtonMail/crypto",
 		Commands: []*cli.Command{
 			{
-				Name: "version",
+				Name:  "version",
 				Usage: "Version Information",
 				Action: func(c *cli.Context) error {
 					fmt.Printf("sop-go %v\n", version)
@@ -44,59 +30,63 @@ func main() {
 				},
 			},
 			{
-				Name: "generate-key",
+				Name:  "generate-key",
 				Usage: "Generate a Secret Key",
+				Flags: []cli.Flag{
+					ArmorFlag,
+					NoArmorFlag,
+				},
 				Action: func(c *cli.Context) error {
-					return commandNotImplemented
+					return GenerateKey(c.Args().Slice()...)
 				},
 			},
 			{
-				Name: "extract-cert",
+				Name:  "extract-cert",
 				Usage: "Extract a Certificate from a Secret Key",
 				Action: func(c *cli.Context) error {
-					return commandNotImplemented
+					return Err69
 				},
 			},
 			{
-				Name: "sign",
+				Name:  "sign",
 				Usage: "Create a Detached Signature",
 				Action: func(c *cli.Context) error {
-					return commandNotImplemented
+					return Err69
 				},
 			},
 			{
-				Name: "verify",
+				Name:  "verify",
 				Usage: "Verify a Detached Signature",
 				Action: func(c *cli.Context) error {
-					return commandNotImplemented
+					return Err69
 				},
 			},
 			{
 				Name:  "encrypt",
 				Usage: "Encrypt a Message",
 				Action: func(c *cli.Context) error {
-					return commandNotImplemented
+					return Err69
 				},
 			},
 			{
 				Name:  "decrypt",
 				Usage: "Decrypt a Message",
 				Action: func(c *cli.Context) error {
-					return commandNotImplemented
+					return Err69
 				},
 			},
 			{
 				Name:  "armor",
 				Usage: "Add ASCII Armor",
 				Action: func(c *cli.Context) error {
-					return commandNotImplemented
+					return Err69
 				},
 			},
 			{
 				Name:  "dearmor",
 				Usage: "Remove ASCII Armor",
 				Action: func(c *cli.Context) error {
-					return commandNotImplemented
+					return Err69
 				},
 			},
 		},
@@ -108,8 +98,8 @@ func main() {
 	sort.Sort(cli.FlagsByName(app.Flags))
 	sort.Sort(cli.CommandsByName(app.Commands))
 
-	err := app.Run(os.Args)
-	if err != nil {
-		log.Fatal(err)
+	Err := app.Run(os.Args)
+	if Err != nil {
+		log.Fatal(Err)
 	}
 }
